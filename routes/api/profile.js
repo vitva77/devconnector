@@ -198,16 +198,24 @@ router.put(
 // @access		Private
 router.delete('/experience/:exp_id', auth, async (req, res) => {
 	try {
-		const profile = await Profile.findOne({ user: req.user.id });
+		const foundProfile = await Profile.findOne({ user: req.user.id });
 
-		// Get remove index
-		const removeIndex = profile.experience.map((item) => item.id).indexOf(req.params.exp_id);
+		const expIds = foundProfile.experience.map((exp) => exp.id.toString());
+		// if i dont add .toString() it returns this weird mongoose coreArray and the ids are somehow objects and it still deletes anyway even if you put /experience/5
+		const removeIndex = expIds.indexOf(req.params.exp_id);
+		if (removeIndex === -1) {
+			return res.status(400).json({ msg: 'Experience ID not found' });
+		} else {
+			// theses console logs helped me figure it out
+			// console.log('expIds', expIds);
+			// console.log('typeof expIds', typeof expIds);
+			// console.log('req.params', req.params);
+			// console.log('removed', expIds.indexOf(req.params.exp_id));
 
-		profile.experience.splice(removeIndex, 1);
-
-		await profile.save();
-
-		res.json(profile);
+			foundProfile.experience.splice(removeIndex, 1);
+			await foundProfile.save();
+			return res.status(200).json(foundProfile);
+		}
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server Error');
@@ -266,16 +274,24 @@ router.put(
 // @access		Private
 router.delete('/education/:edu_id', auth, async (req, res) => {
 	try {
-		const profile = await Profile.findOne({ user: req.user.id });
+		const foundProfile = await Profile.findOne({ user: req.user.id });
 
-		// Get remove index
-		const removeIndex = profile.education.map((item) => item.id).indexOf(req.params.edu_id);
+		const eduIds = foundProfile.education.map((edu) => edu.id.toString());
+		// if i dont add .toString() it returns this weird mongoose coreArray and the ids are somehow objects and it still deletes anyway even if you put /education/5
+		const removeIndex = eduIds.indexOf(req.params.edu_id);
+		if (removeIndex === -1) {
+			return res.status(400).json({ msg: 'Education ID not found' });
+		} else {
+			// theses console logs helped me figure it out
+			// console.log('eduIds', eduIds);
+			// console.log('typeof eduIds', typeof eduIds);
+			// console.log('req.params', req.params);
+			// console.log('removed', eduIds.indexOf(req.params.edu_id));
 
-		profile.education.splice(removeIndex, 1);
-
-		await profile.save();
-
-		res.json(profile);
+			foundProfile.education.splice(removeIndex, 1);
+			await foundProfile.save();
+			return res.status(200).json(foundProfile);
+		}
 	} catch (err) {
 		console.error(err.message);
 		res.status(500).send('Server Error');
