@@ -1,3 +1,4 @@
 {
-	"mongoURI": "mongodb+srv://hanseg123:hanseg123@devconnector-jxeqc.mongodb.net/dev_connector_db?retryWrites=true&w=majority"
+	"mongoURI": "mongodb+srv://hanseg123:hanseg123@devconnector-jxeqc.mongodb.net/dev_connector_db?retryWrites=true&w=majority",
+	"jwtSecret": "mysecrettoken"
 }
